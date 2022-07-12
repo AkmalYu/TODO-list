@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ThemeData _darkTheme = ThemeData(
   brightness: Brightness.dark,
-  primaryColor: Colors.black,
+  primaryColor: const Color(0xFF1E1F25),
 
 );
 
@@ -31,18 +31,17 @@ class MyApp extends StatelessWidget {
           child: Container(
             // margin: EdgeInsets.all(20),
             decoration: BoxDecoration(
-                color: Color(0xFFFFFFFF),
-                boxShadow: [
+              boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 5,
-                    offset: Offset(0, 3), // changes pogsition of shadow
+                    offset: const Offset(0, 3), // changes pogsition of shadow
                   ),
                 ],
                 border: Border.all(
-                  width: 0.5,
-                  color: Color(0xFFFFFFFF),
+                  width: 0.01,
+                  color: const Color(0xFFFFFFFF),
                 ),
                 borderRadius: BorderRadius.circular(15)),
             child: Row(
