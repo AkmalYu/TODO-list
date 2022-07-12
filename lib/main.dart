@@ -1,52 +1,52 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 ThemeData _darkTheme = ThemeData(
   brightness: Brightness.dark,
   primaryColor: const Color(0xFF1E1F25),
-
 );
 
 ThemeData _lightTheme = ThemeData(
-
-    brightness: Brightness.light,
-    primaryColor: Colors.white,
-
+  brightness: Brightness.light,
+  primaryColor: Colors.white,
 );
 
-bool _light = true;
-
 void main() => runApp(MyApp());
-
-
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: _light ? _lightTheme : _darkTheme,
+      theme: _lightTheme,
       darkTheme: _darkTheme,
+      themeMode: ThemeMode.system,
       home: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(20),
+          padding:
+              const EdgeInsets.only(top: 40, left: 20, right: 20, bottom: 20),
+          // отступы за пределами контейнера
           child: Container(
-            // margin: EdgeInsets.all(20),
+            padding: EdgeInsets.only(top: 30, left: 30, right: 30, bottom: 20),
+            //отступы внутри контейнера
             decoration: BoxDecoration(
-              boxShadow: [
+                color: Color(0xFF1E1F25),
+                boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 5,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3), // changes pogsition of shadow
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 4,
+                    offset: const Offset(0, 0), // changes pogsition of shadow
                   ),
                 ],
                 border: Border.all(
-                  width: 0.01,
-                  color: const Color(0xFFFFFFFF),
+                  width: 0.1,
+                  color: Color(0xFFEBEBEB),
                 ),
                 borderRadius: BorderRadius.circular(15)),
-            child: Row(
+            child: Column(
               children: [
-                Column(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "Tasks",
@@ -55,8 +55,26 @@ class MyApp extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                          primary: Color(0xFFFFFFF),
+                          // padding: EdgeInsets.only(left: 5, right: 1),
+                        fixedSize: Size(30, 30),
+                        ),
+                      child: Icon(
+                        CupertinoIcons.add,
+                        size: 30,
+                      ),
+                    ),
                   ],
                 ),
+                Divider(
+                  height: 30,
+                  color: Color(0xFFEBEBEB),
+                  thickness: 1,
+                ),
+
               ],
             ),
           ),
