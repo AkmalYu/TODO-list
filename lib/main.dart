@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,8 +21,17 @@ class AddTask extends StatefulWidget {
 
 class _AddTask extends State<StatefulWidget> {
   final ValueNotifier<ThemeMode> _notifier = ValueNotifier(ThemeMode.light);
-  List<Widget> _cardList = [];
   late TextEditingController _controller;
+
+  _newTask(String text) {
+    setState(
+      () {
+        tmp = text;
+        _addMapTasks();
+        initState();
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -38,6 +44,11 @@ class _AddTask extends State<StatefulWidget> {
     _controller.dispose();
     super.dispose();
   }
+
+  Map<String, bool?> values = {};
+
+  String tmp = "";
+  var temp = false;
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +114,19 @@ class _AddTask extends State<StatefulWidget> {
                           minWidth: 15,
                           height: 40,
                           child: MaterialButton(
-                            onPressed: _addCardWidget,
+                            onPressed: () => showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                content: TextField(
+                                  decoration: InputDecoration(hintText: "Write new task"),
+                                  onSubmitted: _newTask,
+                                  onEditingComplete: () {
+                                    Navigator.pop(context);
+                                    initState();
+                                  },
+                                ),
+                              ),
+                            ),
                             color: Color(0xFFFFFFF),
                             child: Icon(
                               CupertinoIcons.add,
@@ -120,14 +143,23 @@ class _AddTask extends State<StatefulWidget> {
                     ),
                     Container(
                       padding: EdgeInsets.all(0),
-                      child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: _cardList.length,
-                          itemBuilder: (context, index) {
-                            return _cardList[index];
-                          }),
-                    )
+                      child: ListView(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        children: values.keys.map((String key) {
+                          return new CheckboxListTile(
+                            controlAffinity: ListTileControlAffinity.leading,
+                            title: new Text(key),
+                            value: values[key],
+                            onChanged: (bool? value) {
+                              setState(() {
+                                values[key] = value;
+                              });
+                            },
+                          );
+                        }).toList(),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -138,35 +170,9 @@ class _AddTask extends State<StatefulWidget> {
     );
   }
 
-  void _addCardWidget() {
+  void _addMapTasks() {
     setState(() {
-      _cardList.add(_card());
+      values.addEntries([MapEntry(tmp, temp)]);
     });
-  }
-
-  bool _isChecked = true;
-
-  Widget _card() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Checkbox(
-          value: _isChecked,
-          onChanged: (bool? value) {
-            setState(() {
-              _isChecked = value!;
-            });
-          },
-        ),
-        Expanded(
-          child: TextField(
-            controller: _controller,
-            onSubmitted: (String value) {
-
-            },
-          ),
-        ),
-      ],
-    );
   }
 }
