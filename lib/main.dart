@@ -58,13 +58,13 @@ class MyApp extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                          primary: Color(0xFFFFFFF),
-                          // padding: EdgeInsets.only(left: 5, right: 1),
+                        primary: Color(0xFFFFFFF),
+                        // padding: EdgeInsets.only(left: 5, right: 1),
                         fixedSize: Size(30, 30),
-                        ),
+                      ),
                       child: Icon(
                         CupertinoIcons.add,
-                        size: 30,
+                        size: 40,
                       ),
                     ),
                   ],
@@ -74,7 +74,6 @@ class MyApp extends StatelessWidget {
                   color: Color(0xFFEBEBEB),
                   thickness: 1,
                 ),
-
               ],
             ),
           ),
