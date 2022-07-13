@@ -5,7 +5,39 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: AddTask(),
+    );
+  }
+}
+
+class AddTask extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _AddTask();
+  }
+}
+
+class _AddTask extends State<StatefulWidget> {
   final ValueNotifier<ThemeMode> _notifier = ValueNotifier(ThemeMode.light);
+  List<Widget> _cardList = [];
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +55,7 @@ class MyApp extends StatelessWidget {
               // отступы за пределами контейнера
               child: Container(
                 padding:
-                EdgeInsets.only(top: 30, left: 30, right: 30, bottom: 20),
+                    EdgeInsets.only(top: 30, left: 30, right: 30, bottom: 20),
                 //отступы внутри контейнера
                 decoration: BoxDecoration(
                     color: Theme.of(context).splashColor,
@@ -33,7 +65,7 @@ class MyApp extends StatelessWidget {
                         spreadRadius: 2,
                         blurRadius: 4,
                         offset:
-                        const Offset(0, 0), // changes pogsition of shadow
+                            const Offset(0, 0), // changes pogsition of shadow
                       ),
                     ],
                     border: Border.all(
@@ -58,9 +90,9 @@ class MyApp extends StatelessWidget {
                           height: 40,
                           child: MaterialButton(
                             onPressed: () => _notifier.value =
-                            mode == ThemeMode.light
-                                ? ThemeMode.dark
-                                : ThemeMode.light,
+                                mode == ThemeMode.light
+                                    ? ThemeMode.dark
+                                    : ThemeMode.light,
                             child: Icon(
                               CupertinoIcons.eye,
                               size: 30,
@@ -71,9 +103,8 @@ class MyApp extends StatelessWidget {
                           minWidth: 15,
                           height: 40,
                           child: MaterialButton(
-                            onPressed: () {},
+                            onPressed: _addCardWidget,
                             color: Color(0xFFFFFFF),
-
                             child: Icon(
                               CupertinoIcons.add,
                               size: 30,
@@ -87,6 +118,16 @@ class MyApp extends StatelessWidget {
                       color: Color(0xFFEBEBEB),
                       thickness: 1,
                     ),
+                    Container(
+                      padding: EdgeInsets.all(0),
+                      child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: _cardList.length,
+                          itemBuilder: (context, index) {
+                            return _cardList[index];
+                          }),
+                    )
                   ],
                 ),
               ),
@@ -94,6 +135,38 @@ class MyApp extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  void _addCardWidget() {
+    setState(() {
+      _cardList.add(_card());
+    });
+  }
+
+  bool _isChecked = true;
+
+  Widget _card() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Checkbox(
+          value: _isChecked,
+          onChanged: (bool? value) {
+            setState(() {
+              _isChecked = value!;
+            });
+          },
+        ),
+        Expanded(
+          child: TextField(
+            controller: _controller,
+            onSubmitted: (String value) {
+
+            },
+          ),
+        ),
+      ],
     );
   }
 }
