@@ -1,7 +1,12 @@
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
-void main() => runApp(MyApp());
+void main() async {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -22,6 +27,8 @@ class AddTask extends StatefulWidget {
 class _AddTask extends State<StatefulWidget> {
   final ValueNotifier<ThemeMode> _notifier = ValueNotifier(ThemeMode.light);
   late TextEditingController _controller;
+  Map<String, bool?> values = {
+  };
 
   _newTask(String text) {
     setState(
@@ -33,9 +40,15 @@ class _AddTask extends State<StatefulWidget> {
     );
   }
 
+  Future<String> get _localPath async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
   @override
   void initState() {
     super.initState();
+    _read();
     _controller = TextEditingController();
   }
 
@@ -45,7 +58,21 @@ class _AddTask extends State<StatefulWidget> {
     super.dispose();
   }
 
-  Map<String, bool?> values = {};
+  Future<Map<String, bool?>> _read() async {
+    final path = await _localPath;
+    final file = File('$path/task.txt');
+    final jsonStr = await file.readAsString();
+    return values = Map.castFrom(json.decode(jsonStr));
+
+  }
+
+  Future<void> _write(Map<String, bool?> map) async {
+    final jsonStr = jsonEncode(map);
+    final path = await _localPath;
+    final file = File('$path/task.txt');
+
+    await file.writeAsString(jsonStr);
+  }
 
   String tmp = "";
   var temp = false;
@@ -118,7 +145,8 @@ class _AddTask extends State<StatefulWidget> {
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
                                 content: TextField(
-                                  decoration: InputDecoration(hintText: "Write new task"),
+                                  decoration: InputDecoration(
+                                      hintText: "Write new task"),
                                   onSubmitted: _newTask,
                                   onEditingComplete: () {
                                     Navigator.pop(context);
@@ -173,6 +201,7 @@ class _AddTask extends State<StatefulWidget> {
   void _addMapTasks() {
     setState(() {
       values.addEntries([MapEntry(tmp, temp)]);
+      _write(values);
     });
   }
 }
